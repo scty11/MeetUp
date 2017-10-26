@@ -11,8 +11,8 @@ using System;
 namespace MeetUp.Data.Migrations
 {
     [DbContext(typeof(MeetUpContext))]
-    [Migration("20171026200404_InitialSetUp")]
-    partial class InitialSetUp
+    [Migration("20171026220854_tableSetuP")]
+    partial class tableSetuP
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -59,7 +59,9 @@ namespace MeetUp.Data.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("SeatNumber");
+                    b.Property<string>("Row");
+
+                    b.Property<int>("SeatNumber");
 
                     b.HasKey("Id");
 

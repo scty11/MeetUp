@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace MeetUp.Data.Migrations
 {
-    public partial class InitialSetUp : Migration
+    public partial class tableSetuP : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -27,7 +27,8 @@ namespace MeetUp.Data.Migrations
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    SeatNumber = table.Column<string>(type: "TEXT", nullable: true)
+                    Row = table.Column<string>(type: "TEXT", nullable: true),
+                    SeatNumber = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {

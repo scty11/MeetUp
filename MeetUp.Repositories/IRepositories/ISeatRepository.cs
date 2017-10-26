@@ -9,5 +9,6 @@ namespace MeetUp.Repositories.IRepositories
     public interface ISeatRepository
     {
         Task<List<Seat>> GetSeatsAsync();
+        Task<List<Seat>> GetSeatsByIdsAsync(List<int> seatIds);
     }
 }

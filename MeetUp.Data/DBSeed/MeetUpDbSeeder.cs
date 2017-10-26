@@ -78,7 +78,8 @@ namespace MeetUp.Data.DBSeed
             {
                 for (var number = 1; number <= 10; number++)
                 {
-                    seats.Add(new Seat(){SeatNumber = number, Row = ((char)row+65).ToString()});
+                  
+                    seats.Add(new Seat(){SeatNumber = number, Row = ((char)(row + 65)).ToString()});
                 }
             }
 

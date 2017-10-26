@@ -10,7 +10,7 @@ namespace MeetUp.Services.ServiceInterfaces
     {
         Task<List<MeetUpDetail>> GetMeetUpsAsync();
         Task<List<Seat>> GetSeatsAsync();
-        Task<List<Booking>> GetBookingsAsync(DateTime date);
-
+        Task<List<Seat>> GetavailableSeatsAsync(DateTime date);
+        Task<MeetUpDetail> GetMeetUpAsync(DateTime date);
     }
 }

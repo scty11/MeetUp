@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MeetUp.Data.DBContext;
+using MeetUp.Data.models;
 using MeetUp.Repositories.IRepositories;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,14 +18,17 @@ namespace MeetUp.Repositories
         {
             _context = context;
         }
-        public async Task<List<Data.models.MeetUpDetail>> GetMeetUpsAsync()
+        public async Task<List<MeetUpDetail>> GetMeetUpsAsync()
         {
            return await _context.MeetUps.OrderByDescending(x => x.Date).ToListAsync();
         }
 
-        public Task<Data.models.MeetUpDetail> GetMeetUpAsync(DateTime date)
+        public async Task<MeetUpDetail> GetMeetUpWithBookingsAsync(DateTime date)
         {
-            throw new NotImplementedException();
+            return await _context.MeetUps
+                                 .Include(x => x.Bookings)
+                                 .ThenInclude(x => x.Seat)
+                                 .FirstOrDefaultAsync(x => x.Date.Equals(date));
         }
     }
 }

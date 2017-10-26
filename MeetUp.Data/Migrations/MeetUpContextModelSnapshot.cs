@@ -58,7 +58,9 @@ namespace MeetUp.Data.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("SeatNumber");
+                    b.Property<string>("Row");
+
+                    b.Property<int>("SeatNumber");
 
                     b.HasKey("Id");
 

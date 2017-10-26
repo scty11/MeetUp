@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MeetUp.Data.models;
@@ -19,7 +20,9 @@ namespace MeetUp.Repositories
         }
         public async Task<List<Seat>> GetSeatsAsync()
         {
-            return await _context.Seats.ToListAsync();
+            return await _context.Seats.OrderBy(x => x.Row)
+                                 .ThenBy(s => s.SeatNumber)
+                                 .ToListAsync();
         }
     }
 }

@@ -33,5 +33,22 @@ namespace MeetUp.Api.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
+
+        [HttpGet("{date}")]
+        public async Task<ActionResult> MeetUps(DateTime date)
+        {
+            try
+            {
+                var meetUp = await _bookingService.GetMeetUpAsync(date);
+
+                return Ok(meetUp);
+            }
+            catch (Exception exp)
+            {
+                //_Logger.LogError(exp.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
     }
 }
