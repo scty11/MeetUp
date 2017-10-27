@@ -24,7 +24,7 @@ namespace MeetUp.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody]List<CreateBookingDto> createBooking)
         {
-            
+
             if (ModelState.IsValid)
             {
                 var bookings = createBooking.Select(x => new Booking()
@@ -33,13 +33,57 @@ namespace MeetUp.Api.Controllers
                     SeatId = x.SeatId,
                     Email = x.Email,
                     Name = x.Name
-                });
-                _bookingService.createBooking(bookings);
-                return Ok();
+                }).ToList();
+
+                try
+                {
+                   await _bookingService.CreateBookingAsync(bookings);
+                    return Ok();
+                }
+                catch (Exception ex)
+                {
+                    //_Logger.LogError(exp.Message);
+                    return StatusCode(StatusCodes.Status500InternalServerError);
+                }
+              
             }
             else
             {
-                return BadRequest(createBooking);
+                return BadRequest(ModelState);
+            }
+
+
+        }
+
+        [HttpGet]
+        [Route("/BookingByMeetUp/{id}")]
+        public async Task<ActionResult> BookingByMeetUp(int id)
+        {
+            try
+            {
+                var meetUp = await _bookingService.GetMeetUpAsync(id);
+
+                if (meetUp == null) return NotFound();
+                
+                var dto = meetUp.Bookings.Select(x => new BookingDto()
+                {
+                    Email = x.Email,
+                    Name = x.Name,
+                    MeetUpId = x.MeetUpId,
+                    Seat = new SeatDto()
+                    {
+                        Row = x.Seat.Row,
+                        SeatNumber = x.Seat.SeatNumber
+
+                    }
+                });
+
+                return Ok(dto);
+            }
+            catch (Exception exp)
+            {
+                //_Logger.LogError(exp.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
     }

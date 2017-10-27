@@ -12,6 +12,7 @@ namespace MeetUp.Services.ServiceInterfaces
         Task<List<Seat>> GetSeatsAsync();
         Task<List<Seat>> GetavailableSeatsAsync(int id);
         Task<MeetUpDetail> GetMeetUpAsync(int id);
-        void createBooking(IEnumerable<Booking> bookings);
+        Task CreateBookingAsync(List<Booking> bookings);
+
     }
 }

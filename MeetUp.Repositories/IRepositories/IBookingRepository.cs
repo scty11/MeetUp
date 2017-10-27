@@ -9,5 +9,6 @@ namespace MeetUp.Repositories.IRepositories
     public interface IBookingRepository
     {
         Task<List<Booking>> GetBookingsAsync(DateTime date);
+        Task CreateBookingsAsync(List<Booking> bookngs);
     }
 }

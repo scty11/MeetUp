@@ -12,11 +12,13 @@ namespace MeetUp.Services
     {
         private readonly IMeetUpRepository _meetUpRepository;
         private readonly ISeatRepository _seatRepository;
+        private readonly IBookingRepository _bookingRepository;
 
-        public BookingService(IMeetUpRepository meetUpRepository, ISeatRepository seatRepository)
+        public BookingService(IMeetUpRepository meetUpRepository, ISeatRepository seatRepository, IBookingRepository bookingRepository)
         {
             _meetUpRepository = meetUpRepository;
             _seatRepository = seatRepository;
+            _bookingRepository = bookingRepository;
         }
 
         public async Task<List<MeetUpDetail>> GetMeetUpsAsync()
@@ -29,9 +31,9 @@ namespace MeetUp.Services
            return await _meetUpRepository.GetMeetUpWithBookingsAsync(id);
         }
 
-        public void createBooking(IEnumerable<Booking> bookings)
+        public async Task CreateBookingAsync(List<Booking> bookings)
         {
-            throw new NotImplementedException();
+            await _bookingRepository.CreateBookingsAsync(bookings);
         }
 
         public async Task<List<Seat>> GetSeatsAsync()
@@ -53,5 +55,6 @@ namespace MeetUp.Services
 
             return bookedSeats;
         }
+
     }
 }
