@@ -34,23 +34,6 @@ namespace MeetUp.Api.Controllers
             }
         }
 
-        [HttpGet]
-        [Route("/AvailableSeats/{date}")]
-        public async Task<IActionResult> AvailableSeats(DateTime date)
-        {
-            try
-            {
-                var seats = await _bookingService.GetavailableSeatsAsync(date);
-
-                return Ok(seats);
-            }
-            catch (Exception exp)
-            {
-                //_Logger.LogError(exp.Message);
-                return StatusCode(StatusCodes.Status500InternalServerError);
-            }
-        }
-
 
     }
 }

@@ -10,6 +10,6 @@ namespace MeetUp.Repositories.IRepositories
     public interface IMeetUpRepository
     {
         Task<List<MeetUpDetail>> GetMeetUpsAsync();
-        Task<MeetUpDetail> GetMeetUpWithBookingsAsync(DateTime date);
+        Task<MeetUpDetail> GetMeetUpWithBookingsAsync(int id);
     }
 }

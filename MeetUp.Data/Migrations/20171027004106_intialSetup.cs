@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace MeetUp.Data.Migrations
 {
-    public partial class tableSetuP : Migration
+    public partial class intialSetup : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -42,9 +42,9 @@ namespace MeetUp.Data.Migrations
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Email = table.Column<string>(type: "TEXT", nullable: true),
-                    MeetUpId = table.Column<int>(type: "INTEGER", nullable: true),
+                    MeetUpId = table.Column<int>(type: "INTEGER", nullable: false),
                     Name = table.Column<string>(type: "TEXT", nullable: true),
-                    SeatId = table.Column<int>(type: "INTEGER", nullable: true)
+                    SeatId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -54,13 +54,13 @@ namespace MeetUp.Data.Migrations
                         column: x => x.MeetUpId,
                         principalTable: "MeetUps",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Bookings_Seats_SeatId",
                         column: x => x.SeatId,
                         principalTable: "Seats",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(

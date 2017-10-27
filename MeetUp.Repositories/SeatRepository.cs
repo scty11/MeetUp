@@ -24,5 +24,14 @@ namespace MeetUp.Repositories
                                  .ThenBy(s => s.SeatNumber)
                                  .ToListAsync();
         }
+
+        public async Task<List<Seat>> GetSeatsByIdsAsync(List<int> seatIds)
+        {
+            return await _context.Seats
+                .Where(x => !seatIds.Contains(x.Id))
+                .OrderBy(x => x.Row)
+                .ThenBy(s => s.SeatNumber)              
+                .ToListAsync();
+        }
     }
 }

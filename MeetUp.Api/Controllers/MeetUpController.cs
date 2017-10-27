@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MeetUp.Api.DTO;
 using MeetUp.Services.ServiceInterfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -25,7 +26,13 @@ namespace MeetUp.Api.Controllers
             try
             {
                 var meetUps = await _bookingService.GetMeetUpsAsync();
-                return Ok(meetUps);
+
+                return Ok(meetUps.Select(x =>  new MeatUpDto()
+                {
+                    MeetUpDate = x.Date,
+                    Id = x.Id
+                    
+                }));
             }
             catch (Exception exp)
             {
@@ -34,14 +41,29 @@ namespace MeetUp.Api.Controllers
             }
         }
 
-        [HttpGet("{date}")]
-        public async Task<ActionResult> MeetUps(DateTime date)
+        [HttpGet("{id}")]
+        public async Task<ActionResult> MeetUps(int id)
         {
             try
             {
-                var meetUp = await _bookingService.GetMeetUpAsync(date);
+                var meetUp = await _bookingService.GetMeetUpAsync(id);
 
-                return Ok(meetUp);
+                if (meetUp == null) return NotFound();
+
+                var seats = await _bookingService.GetavailableSeatsAsync(id);
+
+                var dto = new MeetUpAvailabilityDto()
+                {
+                    Date = meetUp.Date,
+                    AvailableSeats = seats.Select(x => new SeatDto()
+                    {
+                        Row = x.Row,
+                        SeatNumber = x.SeatNumber
+
+                    }).ToList()
+                };
+
+                return Ok(dto);
             }
             catch (Exception exp)
             {

@@ -11,8 +11,8 @@ using System;
 namespace MeetUp.Data.Migrations
 {
     [DbContext(typeof(MeetUpContext))]
-    [Migration("20171026220854_tableSetuP")]
-    partial class tableSetuP
+    [Migration("20171027004106_intialSetup")]
+    partial class intialSetup
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -27,11 +27,11 @@ namespace MeetUp.Data.Migrations
 
                     b.Property<string>("Email");
 
-                    b.Property<int?>("MeetUpId");
+                    b.Property<int>("MeetUpId");
 
                     b.Property<string>("Name");
 
-                    b.Property<int?>("SeatId");
+                    b.Property<int>("SeatId");
 
                     b.HasKey("Id");
 
@@ -72,11 +72,13 @@ namespace MeetUp.Data.Migrations
                 {
                     b.HasOne("MeetUp.Data.models.MeetUpDetail", "MeetUp")
                         .WithMany("Bookings")
-                        .HasForeignKey("MeetUpId");
+                        .HasForeignKey("MeetUpId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("MeetUp.Data.models.Seat", "Seat")
                         .WithMany("Bookings")
-                        .HasForeignKey("SeatId");
+                        .HasForeignKey("SeatId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }

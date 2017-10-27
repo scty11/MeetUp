@@ -16,16 +16,18 @@ namespace MeetUp.Data.DBSeed
             using (var serviceScope = serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
             {
                 var meetUpDb = serviceScope.ServiceProvider.GetService<MeetUpContext>();
-              
-                    if (!await meetUpDb.MeetUps.AnyAsync())
+
+                if (!await meetUpDb.Seats.AnyAsync())
+                {
+                    await InsertSeatSampleData(meetUpDb);
+                }
+
+                if (!await meetUpDb.MeetUps.AnyAsync())
                     {
                         await InsertMeetUpSampleData(meetUpDb);
                     }
  
-                   if (!await meetUpDb.Seats.AnyAsync())
-                   {
-                       await InsertSeatSampleData(meetUpDb);
-                   }
+                  
 
             }
         }
@@ -45,6 +47,7 @@ namespace MeetUp.Data.DBSeed
                 throw;
             }
         }
+
 
         private static async Task InsertMeetUpSampleData(MeetUpContext meetUpDb)
         {
@@ -66,7 +69,11 @@ namespace MeetUp.Data.DBSeed
         {
             return new List<MeetUpDetail>()
             {
-                new MeetUpDetail(){Date = DateTime.Today},
+                new MeetUpDetail(){Date = DateTime.Today, Bookings = new List<Booking>()
+                {
+                    new Booking(){Email = "test1@test.com",Name = "test1",SeatId = 1},
+                    new Booking(){Email = "test2@test.com",Name = "test2",SeatId = 2}
+                }},
                 new MeetUpDetail(){Date = DateTime.Today.AddDays(7)}
             };
         }

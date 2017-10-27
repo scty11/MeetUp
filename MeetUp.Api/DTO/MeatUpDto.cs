@@ -5,8 +5,9 @@ using System.Threading.Tasks;
 
 namespace MeetUp.Api.DTO
 {
-    public class MeetUpDTO
+    public class MeatUpDto
     {
-        public DateTime Date { get; set; }
+        public DateTime MeetUpDate { get; set; }
+        public int Id { get; set; }
     }
 }

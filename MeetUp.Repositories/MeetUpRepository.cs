@@ -23,12 +23,12 @@ namespace MeetUp.Repositories
            return await _context.MeetUps.OrderByDescending(x => x.Date).ToListAsync();
         }
 
-        public async Task<MeetUpDetail> GetMeetUpWithBookingsAsync(DateTime date)
+        public async Task<MeetUpDetail> GetMeetUpWithBookingsAsync(int id)
         {
             return await _context.MeetUps
                                  .Include(x => x.Bookings)
                                  .ThenInclude(x => x.Seat)
-                                 .FirstOrDefaultAsync(x => x.Date.Equals(date));
+                                 .FirstOrDefaultAsync(x => x.Id == id);
         }
     }
 }

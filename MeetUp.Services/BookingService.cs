@@ -24,9 +24,14 @@ namespace MeetUp.Services
             return await _meetUpRepository.GetMeetUpsAsync();
         }
 
-        public async Task<MeetUpDetail> GetMeetUpAsync(DateTime date)
+        public async Task<MeetUpDetail> GetMeetUpAsync(int id)
         {
-           return await _meetUpRepository.GetMeetUpWithBookingsAsync(date);
+           return await _meetUpRepository.GetMeetUpWithBookingsAsync(id);
+        }
+
+        public void createBooking(IEnumerable<Booking> bookings)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<List<Seat>> GetSeatsAsync()
@@ -34,12 +39,12 @@ namespace MeetUp.Services
             return await _seatRepository.GetSeatsAsync();
         }
 
-        public async Task<List<Seat>> GetavailableSeatsAsync(DateTime date)
+        public async Task<List<Seat>> GetavailableSeatsAsync(int id)
         {
             var bookedSeatsIds = new List<int>();
             var bookedSeats = new List<Seat>();
 
-            var meetUp = await _meetUpRepository.GetMeetUpWithBookingsAsync(date);
+            var meetUp = await _meetUpRepository.GetMeetUpWithBookingsAsync(id);
 
             if (meetUp == null) return bookedSeats;
 

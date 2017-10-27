@@ -10,7 +10,8 @@ namespace MeetUp.Services.ServiceInterfaces
     {
         Task<List<MeetUpDetail>> GetMeetUpsAsync();
         Task<List<Seat>> GetSeatsAsync();
-        Task<List<Seat>> GetavailableSeatsAsync(DateTime date);
-        Task<MeetUpDetail> GetMeetUpAsync(DateTime date);
+        Task<List<Seat>> GetavailableSeatsAsync(int id);
+        Task<MeetUpDetail> GetMeetUpAsync(int id);
+        void createBooking(IEnumerable<Booking> bookings);
     }
 }
