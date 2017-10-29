@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using MeetUp.Data.models;
 
@@ -8,10 +6,8 @@ namespace MeetUp.Services.ServiceInterfaces
 {
     public interface IBookingService
     {
-        Task<List<MeetUpDetail>> GetMeetUpsAsync();
-        Task<List<Seat>> GetSeatsAsync();
-        Task<List<Seat>> GetavailableSeatsAsync(int id);
-        Task<MeetUpDetail> GetMeetUpAsync(int id);
-        void createBooking(IEnumerable<Booking> bookings);
+        Task CreateBookingAsync(List<Booking> bookings);
+        Task<bool> CkeckEmailIsUniqueAsync(string email, int meetUpId);
+        Task<bool> CkeckNameIsUniqueAsync(string name, int meetUpId);
     }
 }

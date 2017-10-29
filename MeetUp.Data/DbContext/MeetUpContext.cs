@@ -1,5 +1,4 @@
-﻿using System;
-using MeetUp.Data.models;
+﻿using MeetUp.Data.models;
 using Microsoft.EntityFrameworkCore;
 
 namespace MeetUp.Data.DBContext

@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace MeetUp.Api.DTO
+namespace MeetUp.Api.DTO.MeetUp
 {
     public class MeetUpAvailabilityDto
     {

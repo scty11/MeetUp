@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace MeetUp.Data.models
+﻿namespace MeetUp.Data.models
 {
     public class Booking
     {

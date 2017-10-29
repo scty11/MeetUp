@@ -10,48 +10,48 @@ namespace MeetUp.Services
 {
     public class BookingService : IBookingService
     {
-        private readonly IMeetUpRepository _meetUpRepository;
-        private readonly ISeatRepository _seatRepository;
+        private readonly IBookingRepository _bookingRepository;
 
-        public BookingService(IMeetUpRepository meetUpRepository, ISeatRepository seatRepository)
+        public BookingService(IBookingRepository bookingRepository)
         {
-            _meetUpRepository = meetUpRepository;
-            _seatRepository = seatRepository;
+            _bookingRepository = bookingRepository;
         }
 
-        public async Task<List<MeetUpDetail>> GetMeetUpsAsync()
+        
+
+        public async Task CreateBookingAsync(List<Booking> bookings)
         {
-            return await _meetUpRepository.GetMeetUpsAsync();
+            await _bookingRepository.CreateBookingsAsync(bookings);
         }
 
-        public async Task<MeetUpDetail> GetMeetUpAsync(int id)
+        public async Task<bool> CkeckEmailIsUniqueAsync(string email, int meetUpId)
         {
-           return await _meetUpRepository.GetMeetUpWithBookingsAsync(id);
+            var bookings = await _bookingRepository.GetBookingByMeetUpIdAsync(meetUpId);
+            if (bookings == null)
+            {
+                return true;
+            }
+            else
+            {
+                return !bookings.Any(x => string.Equals(x.Email, email, 
+                                   StringComparison.OrdinalIgnoreCase));
+            }
         }
 
-        public void createBooking(IEnumerable<Booking> bookings)
+        public async Task<bool> CkeckNameIsUniqueAsync(string name, int meetUpId)
         {
-            throw new NotImplementedException();
+            var bookings = await _bookingRepository.GetBookingByMeetUpIdAsync(meetUpId);
+            if (bookings == null)
+            {
+                return true;
+            }
+            else
+            {
+                return !bookings.Any(x => string.Equals(x.Name, name, 
+                                  StringComparison.OrdinalIgnoreCase));
+            }
         }
 
-        public async Task<List<Seat>> GetSeatsAsync()
-        {
-            return await _seatRepository.GetSeatsAsync();
-        }
-
-        public async Task<List<Seat>> GetavailableSeatsAsync(int id)
-        {
-            var bookedSeatsIds = new List<int>();
-            var bookedSeats = new List<Seat>();
-
-            var meetUp = await _meetUpRepository.GetMeetUpWithBookingsAsync(id);
-
-            if (meetUp == null) return bookedSeats;
-
-            bookedSeatsIds = meetUp.Bookings.Select(x => x.Seat.Id).ToList();
-            bookedSeats = await _seatRepository.GetSeatsByIdsAsync(bookedSeatsIds);
-
-            return bookedSeats;
-        }
+        
     }
 }

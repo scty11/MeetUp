@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using MeetUp.Data.DBContext;
-using MeetUp.Data.DBSeed;
 using MeetUp.Repositories;
 using MeetUp.Repositories.IRepositories;
 using MeetUp.Services;
@@ -14,8 +10,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Diagnostics;
 using Swashbuckle.AspNetCore.Swagger;
+using Microsoft.AspNetCore.Http;
+using FluentValidation.AspNetCore;
 
 namespace MeetUp.Api
 {
@@ -31,7 +29,9 @@ namespace MeetUp.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc();
+            services.AddMvc()
+                .AddFluentValidation(fvc =>
+                fvc.RegisterValidatorsFromAssemblyContaining<Startup>()); 
 
             services.AddSwaggerGen(options =>
             {
@@ -51,15 +51,39 @@ namespace MeetUp.Api
             services.AddScoped<IMeetUpRepository, MeetUpRepository>();
             services.AddScoped<ISeatRepository, SeatRepository>();
             services.AddScoped<IBookingService, BookingService>();
+            services.AddScoped<IMeetUpService, MeetUpService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
-            if (env.IsDevelopment())
+
+            app.UseExceptionHandler(appBuilder =>
             {
-                app.UseDeveloperExceptionPage();
-            }
+                appBuilder.Run(async context =>
+                {
+                    var exceptionHandlerFeature = context.Features.Get<IExceptionHandlerFeature>();
+                    if (exceptionHandlerFeature != null)
+                    {
+                        var logger = loggerFactory.CreateLogger("Global exception logger");
+                        logger.LogError(500,
+                            exceptionHandlerFeature.Error,
+                            exceptionHandlerFeature.Error.Message);
+                        if (env.IsDevelopment())
+                        {
+                            context.Response.StatusCode = 500;
+                            await context.Response.WriteAsync($"Message: {exceptionHandlerFeature.Error.Message}{Environment.NewLine}" +
+                                                              $"Error: { exceptionHandlerFeature.Error}");
+                        }
+                    }                 
+                    else
+                    {
+                        context.Response.StatusCode = 500;
+                        await context.Response.WriteAsync("An unexpected fault happened. Try again later.");
+                    }
+                });
+            });
+            
 
             app.UseSwagger();
 

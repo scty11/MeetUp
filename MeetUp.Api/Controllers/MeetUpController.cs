@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using MeetUp.Api.DTO;
+using MeetUp.Api.DTO.MeetUp;
 using MeetUp.Services.ServiceInterfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MeetUp.Api.Controllers
@@ -14,62 +12,49 @@ namespace MeetUp.Api.Controllers
     public class MeetUpController : Controller
     {
         private readonly IBookingService _bookingService;
+        private readonly IMeetUpService _meetUpService;
 
-        public MeetUpController(IBookingService bookingService)
+        public MeetUpController(IBookingService bookingService, IMeetUpService meetUpService)
         {
             _bookingService = bookingService;
+            _meetUpService = meetUpService;
         }
 
         [HttpGet]
         public async Task<IActionResult> MeetUps()
         {
-            try
-            {
-                var meetUps = await _bookingService.GetMeetUpsAsync();
+            var meetUps = await _meetUpService.GetMeetUpsAsync();
 
-                return Ok(meetUps.Select(x =>  new MeatUpDto()
-                {
-                    MeetUpDate = x.Date,
-                    Id = x.Id
-                    
-                }));
-            }
-            catch (Exception exp)
+            return Ok(meetUps.Select(x =>  new MeatUpDto()
             {
-                //_Logger.LogError(exp.Message);
-                return StatusCode(StatusCodes.Status500InternalServerError);
-            }
+                MeetUpDate = x.Date,
+                Id = x.Id
+                
+            }));
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult> MeetUps(int id)
         {
-            try
+           
+            var meetUp = await _meetUpService.GetMeetUpAsync(id);
+
+            if (meetUp == null) return NotFound();
+
+            var seats = await _meetUpService.GetavailableSeatsAsync(id);
+
+            var dto = new MeetUpAvailabilityDto()
             {
-                var meetUp = await _bookingService.GetMeetUpAsync(id);
-
-                if (meetUp == null) return NotFound();
-
-                var seats = await _bookingService.GetavailableSeatsAsync(id);
-
-                var dto = new MeetUpAvailabilityDto()
+                Date = meetUp.Date,
+                AvailableSeats = seats.Select(x => new SeatDto()
                 {
-                    Date = meetUp.Date,
-                    AvailableSeats = seats.Select(x => new SeatDto()
-                    {
-                        Row = x.Row,
-                        SeatNumber = x.SeatNumber
+                    Row = x.Row,
+                    SeatNumber = x.SeatNumber
 
-                    }).ToList()
-                };
+                }).ToList()
+            };
 
-                return Ok(dto);
-            }
-            catch (Exception exp)
-            {
-                //_Logger.LogError(exp.Message);
-                return StatusCode(StatusCodes.Status500InternalServerError);
-            }
+            return Ok(dto);        
         }
 
     }
