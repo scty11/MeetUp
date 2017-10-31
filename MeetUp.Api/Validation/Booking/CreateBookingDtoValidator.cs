@@ -3,6 +3,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using MeetUp.Api.DTO.Booking;
 using MeetUp.Services.ServiceInterfaces;
+using System;
+using System.Linq;
 
 namespace MeetUp.Api.Validation
 {
@@ -13,15 +15,23 @@ namespace MeetUp.Api.Validation
         public CreateBookingDtoValidator(IBookingService bookingService)
         {
             _bookingService = bookingService;
-            RuleFor(reg => reg.MeetUpId).NotEmpty();
+
+            RuleFor(reg => reg.MeetUpId).NotEmpty()
+                      .MustAsync(CheckAvailability)
+                      .WithMessage("The seat is not available"); 
             RuleFor(reg => reg.SeatId).NotEmpty();
-            RuleFor(reg => reg.Name).NotEmpty();
             RuleFor(reg => reg.Name).NotEmpty()
                 .MustAsync(ValidateUniqueName)
                 .WithMessage("Name is already present on a booking");
             RuleFor(reg => reg.Email).NotEmpty().EmailAddress()
                 .MustAsync(ValidateUniqueEmail)
                 .WithMessage("Email is already present on a booking");
+        }
+
+        private async Task<bool> CheckAvailability(CreateBookingDto args, int meetUpId, CancellationToken arg2)
+        {
+            var bookings = await _bookingService.GetBookingByMeetUpIdAsync(meetUpId);
+            return !bookings.Any(x => x.SeatId == args.SeatId);
         }
 
         public async Task<bool> ValidateUniqueEmail(CreateBookingDto args, string email,

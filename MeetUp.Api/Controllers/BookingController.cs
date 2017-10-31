@@ -23,12 +23,13 @@ namespace MeetUp.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody]List<CreateBookingDto> createBooking)
+        public async Task<IActionResult> Create([FromBody]List<CreateBookingDto> createBookings)
         {
 
             if (ModelState.IsValid)
             {
-                var bookings = createBooking.Select(x => new Booking()
+                var bookings = createBookings
+                    .Select(x => new Booking()
                 {
                     MeetUpId = x.MeetUpId,
                     SeatId = x.SeatId,
@@ -48,10 +49,10 @@ namespace MeetUp.Api.Controllers
         }
 
         [HttpGet]
-        [Route("/BookingByMeetUp/{id}")]
-        public async Task<ActionResult> BookingByMeetUp(int id)
+        [Route("/BookingByMeetUp/{meetUpId}")]
+        public async Task<ActionResult> BookingByMeetUp(int meetUpId)
         {
-            var meetUp = await _meetUpService.GetMeetUpAsync(id);
+            var meetUp = await _meetUpService.GetMeetUpAsync(meetUpId);
 
             if (meetUp == null) return NotFound();
             

@@ -33,26 +33,22 @@ namespace MeetUp.Api.Controllers
             }));
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult> MeetUps(int id)
+        [HttpGet("{meetUpId}/AvailableSeats")]
+        public async Task<ActionResult> MeetUps(int meetUpId)
         {
            
-            var meetUp = await _meetUpService.GetMeetUpAsync(id);
+            var meetUp = await _meetUpService.GetMeetUpAsync(meetUpId);
 
             if (meetUp == null) return NotFound();
 
-            var seats = await _meetUpService.GetavailableSeatsAsync(id);
+            var seats = await _meetUpService.GetavailableSeatsAsync(meetUpId);
 
-            var dto = new MeetUpAvailabilityDto()
+            var dto = seats.Select(x => new SeatDto()
             {
-                Date = meetUp.Date,
-                AvailableSeats = seats.Select(x => new SeatDto()
-                {
-                    Row = x.Row,
-                    SeatNumber = x.SeatNumber
+                Row = x.Row,
+                SeatNumber = x.SeatNumber
 
-                }).ToList()
-            };
+            }).ToList();
 
             return Ok(dto);        
         }

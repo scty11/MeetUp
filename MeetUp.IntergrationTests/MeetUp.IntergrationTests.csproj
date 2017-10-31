@@ -4,6 +4,8 @@
     <TargetFramework>netcoreapp2.0</TargetFramework>
 
     <IsPackable>false</IsPackable>
+     <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
 
   <ItemGroup>
@@ -15,6 +17,9 @@
 
   <ItemGroup>
     <ProjectReference Include="..\MeetUp.Api\MeetUp.Api.csproj" />
+    <ProjectReference Include="..\MeetUp.Data\MeetUp.Data.csproj" />
+    <ProjectReference Include="..\MeetUp.Repositories\MeetUp.Repositories.csproj" />
+    <ProjectReference Include="..\MeetUp.Services\MeetUp.Services.csproj" />
   </ItemGroup>
 
 </Project>

@@ -52,6 +52,9 @@ namespace MeetUp.Services
             }
         }
 
-        
+        public async Task<List<Booking>> GetBookingByMeetUpIdAsync(int meetUpId)
+        {
+           return  await _bookingRepository.GetBookingByMeetUpIdAsync(meetUpId);
+        }
     }
 }

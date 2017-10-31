@@ -12,7 +12,6 @@ namespace MeetUp.Repositories
     public class BookingRepository : IBookingRepository
     {
         private readonly MeetUpContext _context;
-        private readonly ILogger _logger;
 
         public BookingRepository(MeetUpContext context)
         {
@@ -22,30 +21,15 @@ namespace MeetUp.Repositories
         public async Task CreateBookingsAsync(List<Booking> bookngs)
         {
             _context.AddRange(bookngs);
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (System.Exception exp)
-            {
-                _logger.LogError($"Error in {nameof(CreateBookingsAsync)}: " + exp.Message);
-                throw;
-            }
+            await _context.SaveChangesAsync();
         }
 
         public async Task<List<Booking>> GetBookingByMeetUpIdAsync(int meetUpId)
-        {
+        {        
            
-            try
-            {
-               return await _context.Bookings.Where(x => x.MeetUpId == meetUpId)
-                    .ToListAsync();
-            }
-            catch (System.Exception exp)
-            {
-                _logger.LogError($"Error in {nameof(GetBookingByMeetUpIdAsync)}: " + exp.Message);
-                throw;
-            }
+           return await _context.Bookings.Where(x => x.MeetUpId == meetUpId)
+                .ToListAsync();
+
         }
     }
 }
