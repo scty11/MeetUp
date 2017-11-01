@@ -15,9 +15,7 @@ namespace MeetUp.Services
         public BookingService(IBookingRepository bookingRepository)
         {
             _bookingRepository = bookingRepository;
-        }
-
-        
+        }      
 
         public async Task CreateBookingAsync(List<Booking> bookings)
         {

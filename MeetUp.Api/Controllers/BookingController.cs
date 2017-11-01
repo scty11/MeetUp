@@ -43,7 +43,7 @@ namespace MeetUp.Api.Controllers
 
         }
 
-        [HttpGet("/BookingByMeetUp/{meetUpId}")]
+        [HttpGet("BookingByMeetUp/{meetUpId}")]
         public async Task<ActionResult> BookingByMeetUp(int meetUpId)
         {
             var meetUp = await _meetUpService.GetMeetUpAsync(meetUpId);

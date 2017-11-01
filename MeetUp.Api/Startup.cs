@@ -15,6 +15,7 @@ using Swashbuckle.AspNetCore.Swagger;
 using Microsoft.AspNetCore.Http;
 using FluentValidation.AspNetCore;
 using AutoMapper;
+using MeetUp.Data.DBSeed;
 
 namespace MeetUp.Api
 {
@@ -100,7 +101,7 @@ namespace MeetUp.Api
 
             app.UseMvc();
 
-            //MeetUpDbSeeder.SeedAsync(app.ApplicationServices).Wait();
+            MeetUpDbSeeder.SeedAsync(app.ApplicationServices).Wait();
         }
     }
 }

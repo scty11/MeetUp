@@ -1,20 +1,35 @@
-﻿using System.IO;
-using System.Net.Http;
-using MeetUp.Api;
+﻿using MeetUp.Api;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Net.Http;
+using System.Text;
 
 namespace MeetUp.IntergrationTests.Fixture
 {
-    public class TestContext
+    public class TestsBase : IDisposable
     {
         private TestServer _server;
         public HttpClient Client { get; private set; }
-
-        public TestContext()
+        public TestsBase()
         {
+            // Do "global" initialization here; Called before every test method.
             SetUpClient();
+        }
+
+        public void Dispose()
+        {
+            // Do "global" teardown here; Called after every test method.
+            var file = $"{Directory.GetCurrentDirectory()}/MeetUp.sqlite";
+            if (File.Exists(file))
+            {
+                File.Delete(file);
+            }
+            _server?.Dispose();
+            Client?.Dispose();
         }
 
         private void SetUpClient()
@@ -28,7 +43,7 @@ namespace MeetUp.IntergrationTests.Fixture
                         .AddJsonFile("appsettings.json")
                         .AddJsonFile("appsettings.Development.json")
                         .Build()
-                    )                
+                    )
                 .UseStartup<Startup>());
 
             Client = _server.CreateClient();
