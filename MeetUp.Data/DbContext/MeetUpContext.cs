@@ -5,10 +5,14 @@ namespace MeetUp.Data.DBContext
 {
     public class MeetUpContext : DbContext
     {
-        public DbSet<models.MeetUpDetail> MeetUps { get; set; }
+
+        public DbSet<MeetUpDetail> MeetUps { get; set; }
         public DbSet<Booking> Bookings { get; set; }
         public DbSet<Seat> Seats { get; set; }
 
-        public MeetUpContext(DbContextOptions<MeetUpContext> options) : base(options) { }
+        public MeetUpContext(DbContextOptions<MeetUpContext> options) : base(options)
+        {
+            Database.Migrate();
+        }
     }
 }

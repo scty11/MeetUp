@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace MeetUp.Api.DTO.Booking
+﻿namespace MeetUp.Api.DTO.Booking
 {
     public class CreateBookingDto
     {

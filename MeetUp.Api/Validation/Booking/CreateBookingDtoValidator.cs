@@ -1,12 +1,11 @@
-﻿using FluentValidation;
+﻿using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using FluentValidation;
 using MeetUp.Api.DTO.Booking;
 using MeetUp.Services.ServiceInterfaces;
-using System;
-using System.Linq;
 
-namespace MeetUp.Api.Validation
+namespace MeetUp.Api.Validation.Booking
 {
     public class CreateBookingDtoValidator : AbstractValidator<CreateBookingDto>
     {

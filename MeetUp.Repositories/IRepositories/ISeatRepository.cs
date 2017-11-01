@@ -8,5 +8,6 @@ namespace MeetUp.Repositories.IRepositories
     {
         Task<List<Seat>> GetSeatsAsync();
         Task<List<Seat>> GetSeatsByIdsAsync(List<int> seatIds);
+        Task<List<Seat>> GetSeatsByIdsPageAsync(List<int> seatIds, int skip, int take);
     }
 }

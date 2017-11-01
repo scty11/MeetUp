@@ -16,11 +16,12 @@ namespace MeetUp.Repositories
         {
             _context = context;
         }
+
         public async Task<List<Seat>> GetSeatsAsync()
         {
             return await _context.Seats.OrderBy(x => x.Row)
-                                 .ThenBy(s => s.SeatNumber)
-                                 .ToListAsync();
+                .ThenBy(s => s.SeatNumber)
+                .ToListAsync();
         }
 
         public async Task<List<Seat>> GetSeatsByIdsAsync(List<int> seatIds)
@@ -28,7 +29,18 @@ namespace MeetUp.Repositories
             return await _context.Seats
                 .Where(x => !seatIds.Contains(x.Id))
                 .OrderBy(x => x.Row)
-                .ThenBy(s => s.SeatNumber)              
+                .ThenBy(s => s.SeatNumber)
+                .ToListAsync();
+        }
+
+        public async Task<List<Seat>> GetSeatsByIdsPageAsync(List<int> seatIds, int skip, int take)
+        {
+            return await _context.Seats
+                .Where(x => !seatIds.Contains(x.Id))
+                .OrderBy(x => x.Row)
+                .ThenBy(s => s.SeatNumber)
+                .Skip(skip)
+                .Take(take)
                 .ToListAsync();
         }
     }

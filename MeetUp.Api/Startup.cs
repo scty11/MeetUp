@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Diagnostics;
 using Swashbuckle.AspNetCore.Swagger;
 using Microsoft.AspNetCore.Http;
 using FluentValidation.AspNetCore;
+using AutoMapper;
 
 namespace MeetUp.Api
 {
@@ -30,8 +31,8 @@ namespace MeetUp.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc()
-                .AddFluentValidation(fvc =>
-                fvc.RegisterValidatorsFromAssemblyContaining<Startup>()); 
+            .AddFluentValidation(fvc =>
+            fvc.RegisterValidatorsFromAssemblyContaining<Startup>());
 
             services.AddSwaggerGen(options =>
             {
@@ -42,8 +43,10 @@ namespace MeetUp.Api
                     Description = "ASP.NET Core/Angular MeetUp Swagger Documentation",
                 });
             });
-
-            services.AddDbContext<MeetUpContext>(options => {
+            services.AddAutoMapper();
+            var t = Configuration.GetConnectionString("MeetUpSqliteConnectionString");
+            services.AddDbContext<MeetUpContext>(options =>
+            {
                 options.UseSqlite(Configuration.GetConnectionString("MeetUpSqliteConnectionString"));
             });
 
@@ -75,7 +78,7 @@ namespace MeetUp.Api
                             await context.Response.WriteAsync($"Message: {exceptionHandlerFeature.Error.Message}{Environment.NewLine}" +
                                                               $"Error: { exceptionHandlerFeature.Error}");
                         }
-                    }                 
+                    }
                     else
                     {
                         context.Response.StatusCode = 500;
@@ -83,7 +86,7 @@ namespace MeetUp.Api
                     }
                 });
             });
-            
+
 
             app.UseSwagger();
 
@@ -94,20 +97,10 @@ namespace MeetUp.Api
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
             });
 
-            AutoMapper.Mapper.Initialize(cfg =>
-            {
-                cfg.CreateMap<Entities.City, Models.CityWithoutPointsOfInterestDto>();
-                cfg.CreateMap<Entities.City, Models.CityDto>();
-                cfg.CreateMap<Entities.PointOfInterest, Models.PointOfInterestDto>();
-                cfg.CreateMap<Models.PointOfInterestForCreationDto, Entities.PointOfInterest>();
-                cfg.CreateMap<Models.PointOfInterestForUpdateDto, Entities.PointOfInterest>();
-                cfg.CreateMap<Entities.PointOfInterest, Models.PointOfInterestForUpdateDto>();
-            });
 
             app.UseMvc();
 
-
-            
+            //MeetUpDbSeeder.SeedAsync(app.ApplicationServices).Wait();
         }
     }
 }

@@ -4,21 +4,21 @@ using MeetUp.Data.models;
 using MeetUp.Repositories.IRepositories;
 using MeetUp.Services;
 using Moq;
-using NUnit.Framework;
+using Xunit;
 
 namespace MeetUp.UnitTests
 {
-    public class UnitTest1
+    public class BookingServiceUnitTests
     {
         private Mock<IBookingRepository> _bookingRepoMock;
 
-        [SetUp]
-        public void Setup()
+      
+        public BookingServiceUnitTests()
         {
             _bookingRepoMock = new Mock<IBookingRepository>();
         }
 
-        [Test]
+        [Fact]
         public void WhenEmail_IsNotUniqueForBooking_ShouldReturnFalse()
         {            
             _bookingRepoMock.Setup(x => x.GetBookingByMeetUpIdAsync(It.IsAny<int>())).ReturnsAsync(
@@ -31,7 +31,7 @@ namespace MeetUp.UnitTests
             result.Should().Be(false);
         }
 
-        [Test]
+        [Fact]
         public void WhenName_IsNotUniqueForBooking_ShouldReturnFalse()
         {
             _bookingRepoMock.Setup(x => x.GetBookingByMeetUpIdAsync(It.IsAny<int>())).ReturnsAsync(

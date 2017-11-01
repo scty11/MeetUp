@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using MeetUp.Api.DTO;
+using AutoMapper;
 using MeetUp.Api.DTO.Booking;
 using MeetUp.Data.models;
 using MeetUp.Services.ServiceInterfaces;
@@ -15,11 +14,14 @@ namespace MeetUp.Api.Controllers
     {
         private readonly IBookingService _bookingService;
         private readonly IMeetUpService _meetUpService;
+        private readonly IMapper _mapper;
 
-        public BookingController(IBookingService bookingService, IMeetUpService meetUpService)
+        public BookingController(IBookingService bookingService, IMeetUpService meetUpService, 
+                                                                                IMapper mapper)
         {
             _bookingService = bookingService;
             _meetUpService = meetUpService;
+            _mapper = mapper;
         }
 
         [HttpPost]
@@ -28,14 +30,7 @@ namespace MeetUp.Api.Controllers
 
             if (ModelState.IsValid)
             {
-                var bookings = createBookings
-                    .Select(x => new Booking()
-                {
-                    MeetUpId = x.MeetUpId,
-                    SeatId = x.SeatId,
-                    Email = x.Email,
-                    Name = x.Name
-                }).ToList();
+                var bookings = _mapper.Map<List<Booking>>(createBookings);
                               
                 await _bookingService.CreateBookingAsync(bookings);
                 return Ok();
@@ -48,26 +43,14 @@ namespace MeetUp.Api.Controllers
 
         }
 
-        [HttpGet]
-        [Route("/BookingByMeetUp/{meetUpId}")]
+        [HttpGet("/BookingByMeetUp/{meetUpId}")]
         public async Task<ActionResult> BookingByMeetUp(int meetUpId)
         {
             var meetUp = await _meetUpService.GetMeetUpAsync(meetUpId);
 
             if (meetUp == null) return NotFound();
-            
-            var dto = meetUp.Bookings.Select(x => new BookingDto()
-            {
-                Email = x.Email,
-                Name = x.Name,
-                MeetUpId = x.MeetUpId,
-                Seat = new SeatDto()
-                {
-                    Row = x.Seat.Row,
-                    SeatNumber = x.Seat.SeatNumber
 
-                }
-            });
+            var dto = _mapper.Map<List<BookingDto>>(meetUp.Bookings);
 
             return Ok(dto);
         }

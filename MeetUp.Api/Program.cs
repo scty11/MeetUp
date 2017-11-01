@@ -1,7 +1,5 @@
-﻿using System;
-using Microsoft.AspNetCore;
+﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-using MeetUp.Data.DBSeed;
 using Microsoft.Extensions.Logging;
 
 namespace MeetUp.Api
@@ -12,18 +10,8 @@ namespace MeetUp.Api
         {
 
             var host = BuildWebHost(args);
-            //using (var scope = host.Services.CreateScope())
-            //{
-            //    var services = scope.ServiceProvider;
-            //        EnsureDataStorageIsReady(services);
-            //}
-            
-            host.Run();
-        }
 
-        private static void EnsureDataStorageIsReady(IServiceProvider services)
-        {
-            MeetUpDbSeeder.SeedAsync(services).Wait();
+            host.Run();
         }
 
         public static IWebHost BuildWebHost(string[] args) =>

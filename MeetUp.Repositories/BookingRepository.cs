@@ -5,7 +5,6 @@ using MeetUp.Data.models;
 using MeetUp.Repositories.IRepositories;
 using MeetUp.Data.DBContext;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 
 namespace MeetUp.Repositories
 {
@@ -28,6 +27,7 @@ namespace MeetUp.Repositories
         {        
            
            return await _context.Bookings.Where(x => x.MeetUpId == meetUpId)
+                .Include(x => x.Seat)
                 .ToListAsync();
 
         }

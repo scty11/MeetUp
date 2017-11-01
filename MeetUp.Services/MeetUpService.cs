@@ -28,7 +28,7 @@ namespace MeetUp.Services
             return await _seatRepository.GetSeatsAsync();
         }
 
-        public async Task<List<Seat>> GetavailableSeatsAsync(int id)
+        public async Task<List<Seat>> GetAvailableSeatsAsync(int id)
         {
             var bookedSeatsIds = new List<int>();
             var bookedSeats = new List<Seat>();
@@ -46,6 +46,22 @@ namespace MeetUp.Services
         public async Task<MeetUpDetail> GetMeetUpAsync(int id)
         {
             return await _meetUpRepository.GetMeetUpWithBookingsAsync(id);
+        }
+
+
+        public async Task<List<Seat>> GetAvailableSeatsPageAsync(int meetUpId, int skip, int take)
+        {
+            var bookedSeatsIds = new List<int>();
+            var bookedSeats = new List<Seat>();
+
+            var meetUp = await _meetUpRepository.GetMeetUpWithBookingsAsync(meetUpId);
+
+            if (meetUp == null) return bookedSeats;
+
+            bookedSeatsIds = meetUp.Bookings.Select(x => x.Seat.Id).ToList();
+            bookedSeats = await _seatRepository.GetSeatsByIdsPageAsync(bookedSeatsIds,skip,take);
+
+            return bookedSeats;
         }
     }
 }

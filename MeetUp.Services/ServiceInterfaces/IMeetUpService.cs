@@ -8,7 +8,9 @@ namespace MeetUp.Services.ServiceInterfaces
     {
         Task<List<MeetUpDetail>> GetMeetUpsAsync();
         Task<List<Seat>> GetSeatsAsync();
-        Task<List<Seat>> GetavailableSeatsAsync(int id);
+        Task<List<Seat>> GetAvailableSeatsAsync(int id);
         Task<MeetUpDetail> GetMeetUpAsync(int id);
+        Task<List<Seat>> GetAvailableSeatsPageAsync(int meetUpId, int skip, int take);
+
     }
 }
