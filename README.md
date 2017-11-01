@@ -22,4 +22,4 @@ Things to do.
 2. validate the database objects and add fluent api configs.
 3. ceate a generic base repository when more actions are added.
 4. possible create a unit of work for complex logic.
-
+5. Add a TestStartUp for intergration tests instead of using current StartUp
