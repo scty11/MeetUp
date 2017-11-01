@@ -45,7 +45,7 @@ namespace MeetUp.Api
                 });
             });
             services.AddAutoMapper();
-            var t = Configuration.GetConnectionString("MeetUpSqliteConnectionString");
+            
             services.AddDbContext<MeetUpContext>(options =>
             {
                 options.UseSqlite(Configuration.GetConnectionString("MeetUpSqliteConnectionString"));
